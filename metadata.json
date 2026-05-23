@@ -1,0 +1,6 @@
+{
+  "name": "BananaFans",
+  "description": "A funny and premium single-page landing page client intake funnel for Oilgate AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

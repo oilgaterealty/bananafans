@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-oilgate-blue: #0072ff;
+  --color-oilgate-cyan: #00f2fe;
+  --color-oilgate-gold: #c5a059;
+  --color-oilgate-dark: #05070c;
+  --color-oilgate-card: #0a0e1a;
+  --color-oilgate-border: #131b2e;
+}
+
+/* Animations & Special Utilities */
+@layer utilities {
+  .glow-blue {
+    text-shadow: 0 0 10px rgba(0, 114, 255, 0.6), 0 0 20px rgba(0, 114, 255, 0.4);
+  }
+  .shadow-glow-blue {
+    box-shadow: 0 0 15px rgba(0, 114, 255, 0.15), 0 0 30px rgba(0, 114, 255, 0.1);
+  }
+  .shadow-glow-blue-hover:hover {
+    box-shadow: 0 0 25px rgba(0, 114, 255, 0.35), 0 0 45px rgba(0, 242, 254, 0.2);
+  }
+  .shadow-glow-gold {
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+  }
+}
+
+/* Base style settings */
+html, body, #root {
+  background-color: var(--color-oilgate-dark);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbars for modal and dark pages */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-oilgate-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 114, 255, 0.2), inset 0 0 15px rgba(0, 114, 255, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 114, 255, 0.4), inset 0 0 25px rgba(0, 114, 255, 0.15);
+  }
+}
+
+.pulse-border-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+@keyframes slow-shimmer {
+  0% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(0, 114, 255, 0.1));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(0, 114, 255, 0.4));
+  }
+  100% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(0, 114, 255, 0.1));
+  }
+}
+
+.shimmer-logo {
+  animation: slow-shimmer 4s infinite ease-in-out;
+}
+
+@keyframes cinematic-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 0px transparent;
+    filter: blur(2px);
+  }
+  20% {
+    opacity: 0.15;
+    filter: blur(1px);
+  }
+  45% {
+    opacity: 0.85;
+    text-shadow: 0 0 15px rgba(0, 114, 255, 0.75), 0 0 30px rgba(0, 242, 254, 0.45);
+    filter: blur(0px);
+  }
+  75% {
+    opacity: 1;
+    text-shadow: 0 0 4px rgba(0, 114, 255, 0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: -0.025em; /* Settles back to normal tracking-tight */
+    text-shadow: 0 0 0px transparent;
+    filter: blur(0px);
+  }
+}
+
+.animate-cinematic-headline {
+  animation: cinematic-reveal 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cinematic-headline {
+    animation: simple-fade 1.2s ease-out forwards;
+    letter-spacing: -0.025em !important;
+    transform: none !important;
+  }
+}
+
+@keyframes simple-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
