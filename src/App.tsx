@@ -379,8 +379,9 @@ export default function App() {
                     loop
                     muted
                     playsInline
-                    className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-700 ${videoStatus === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
-                    onLoadedData={() => setVideoStatus('loaded')}
+                    preload="auto"
+                    className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-300 ${videoStatus === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
+                    onCanPlay={() => setVideoStatus('loaded')}
                     onError={() => setVideoStatus('error')}
                   />
 
