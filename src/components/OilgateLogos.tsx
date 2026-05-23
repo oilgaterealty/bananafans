@@ -6,27 +6,38 @@ interface LogoProps {
   style?: React.CSSProperties;
 }
 
-const OILGATE_DROP_LOGO_SRC = 'data:image/webp;base64,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';
-const OILGATE_FULL_LOGO_SRC = 'data:image/webp;base64,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';
+const DropSvg: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ className = '', style }) => (
+  <svg id="oilgate-drop-logo" className={className} style={style} viewBox="0 0 240 360" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Oilgate AI Logo">
+    <defs>
+      <linearGradient id="g1" x1="65" y1="20" x2="185" y2="335" gradientUnits="userSpaceOnUse"><stop stopColor="#fff0bd"/><stop offset="0.35" stopColor="#c79a3f"/><stop offset="0.72" stopColor="#6e491a"/><stop offset="1" stopColor="#fff0bd"/></linearGradient>
+      <linearGradient id="g2" x1="140" y1="50" x2="70" y2="310" gradientUnits="userSpaceOnUse"><stop stopColor="#fff4c8"/><stop offset="0.45" stopColor="#c79a3f"/><stop offset="1" stopColor="#4d3211"/></linearGradient>
+      <linearGradient id="b1" x1="0" y1="105" x2="0" y2="290" gradientUnits="userSpaceOnUse"><stop stopColor="#20f7ff"/><stop offset="1" stopColor="#0072ff"/></linearGradient>
+      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M120 20C120 20 210 132 210 224C210 287 170 332 120 332C70 332 30 287 30 224C30 132 120 20 120 20Z" fill="#03060b" stroke="url(#g1)" strokeWidth="7"/>
+    <path d="M119 52C92 119 52 181 52 234C52 273 79 313 119 321C111 307 96 282 96 244C96 190 113 116 119 52Z" fill="url(#g2)"/>
+    <path d="M121 92C106 140 77 188 77 237C77 267 95 293 121 301C115 289 108 269 108 244C108 193 118 130 121 92Z" fill="url(#g2)" opacity="0.84"/>
+    <g stroke="url(#b1)" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)" strokeWidth="4"><path d="M138 118V190L151 204V292"/><path d="M162 147V214L176 229V290"/><path d="M124 195V284"/><path d="M190 189V258"/><path d="M108 226V266"/></g>
+    <g filter="url(#glow)" fill="#03060b"><circle cx="138" cy="118" r="10" stroke="#20f7ff" strokeWidth="4"/><circle cx="162" cy="147" r="10" stroke="#20f7ff" strokeWidth="4"/><circle cx="124" cy="195" r="10" stroke="#20f7ff" strokeWidth="4"/><circle cx="190" cy="189" r="10" stroke="#20f7ff" strokeWidth="4"/><circle cx="108" cy="226" r="9" stroke="#20f7ff" strokeWidth="4"/></g>
+  </svg>
+);
 
 export const OilgateDropLogo: React.FC<LogoProps> = ({ className = '', style }) => (
-  <img
-    id="oilgate-drop-logo"
-    src={OILGATE_DROP_LOGO_SRC}
-    alt="Oilgate AI Logo"
-    className={className}
-    style={style}
-    referrerPolicy="no-referrer"
-  />
+  <DropSvg className={className} style={style} />
 );
 
 export const OilgateFullLogo: React.FC<LogoProps> = ({ className = '', style }) => (
-  <img
-    id="oilgate-full-logo"
-    src={OILGATE_FULL_LOGO_SRC}
-    alt="Oilgate AI Full Logo"
-    className={className}
-    style={style}
-    referrerPolicy="no-referrer"
-  />
+  <div id="oilgate-full-logo" className={className} style={style} aria-label="Oilgate AI Full Logo">
+    <div style={{ width: '100%', height: '62%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <DropSvg style={{ width: '54%', height: '100%', filter: 'drop-shadow(0 0 10px rgba(0, 170, 255, 0.45))' }} />
+    </div>
+    <div style={{ marginTop: '-6px', textAlign: 'center', fontFamily: 'Arial, Helvetica, sans-serif', fontWeight: 800, letterSpacing: '0.28em', color: '#f5f5f5', fontSize: 'clamp(18px, 4.2vw, 32px)', textShadow: '0 0 10px rgba(255,255,255,.18)' }}>
+      OILGATE <span style={{ color: '#00b8ff', textShadow: '0 0 10px rgba(0,184,255,.55)' }}>AI</span>
+    </div>
+    <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#c79a3f', fontSize: 'clamp(7px, 1.45vw, 10px)', fontFamily: 'Arial, Helvetica, sans-serif', fontWeight: 700, letterSpacing: '0.22em', whiteSpace: 'nowrap' }}>
+      <span style={{ width: '28px', height: '1px', background: '#c79a3f', display: 'inline-block' }} />
+      <span>INTELLIGENCE UNLOCKS POTENTIAL</span>
+      <span style={{ width: '28px', height: '1px', background: '#c79a3f', display: 'inline-block' }} />
+    </div>
+  </div>
 );
