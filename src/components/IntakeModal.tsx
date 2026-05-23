@@ -667,8 +667,8 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose }) => 
               transition={{ delay: 0.1, duration: 0.5, ease: 'easeOut' }}
               className="flex flex-col items-center justify-center mb-6 mt-2 md:mt-4 pt-0"
             >
-              <OilgateFullLogo className="w-[231px] h-[230px] mt-[-16px] pt-0" style={{ width: '231px', height: '230px', marginTop: '-16px', paddingTop: '0px' }} />
-              <div className="mt-[-18px] text-center" style={{ marginTop: '-18px' }}>
+              <OilgateFullLogo className="w-[280px] mt-0 pt-0" style={{ width: '280px', maxWidth: '80%', height: 'auto', marginTop: '0px', paddingTop: '0px' }} />
+              <div className="mt-3 text-center" style={{ marginTop: '12px' }}>
                 <span className="font-mono text-xs tracking-widest text-oilgate-gold uppercase">
                   Development Intent intake
                 </span>
