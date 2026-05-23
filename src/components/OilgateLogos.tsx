@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface LogoProps {
   className?: string;
@@ -6,275 +6,27 @@ interface LogoProps {
   style?: React.CSSProperties;
 }
 
-/**
- * Drop-Only Logo: Golden water drop silhouette with glowing circuit traces.
- * Attempts to load from `/assets/oilgate-ai-drop-logo.png` (with an optional background shadow/glow).
- * Falls back to a high-fidelity inline SVG rendering of the bronze-gold drop & glowing circuit logic
- * if the file is not found.
- */
-export const OilgateDropLogo: React.FC<LogoProps> = ({ className = '', style }) => {
-  const [error, setError] = useState(false);
+const OILGATE_DROP_LOGO_SRC = 'data:image/webp;base64,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';
+const OILGATE_FULL_LOGO_SRC = 'data:image/webp;base64,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';
 
-  if (error) {
-    return (
-      <svg
-        id="oilgate-drop-svg-fallback"
-        className={`shimmer-logo ${className}`}
-        style={style}
-        viewBox="0 0 200 320"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="gold-grad-outer" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#eed48f" />
-            <stop offset="35%" stopColor="#c5a059" />
-            <stop offset="70%" stopColor="#8d6526" />
-            <stop offset="100%" stopColor="#eed48f" />
-          </linearGradient>
+export const OilgateDropLogo: React.FC<LogoProps> = ({ className = '', style }) => (
+  <img
+    id="oilgate-drop-logo"
+    src={OILGATE_DROP_LOGO_SRC}
+    alt="Oilgate AI Logo"
+    className={className}
+    style={style}
+    referrerPolicy="no-referrer"
+  />
+);
 
-          <linearGradient id="gold-grad-inner" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fff3d1" />
-            <stop offset="40%" stopColor="#c5a059" />
-            <stop offset="100%" stopColor="#5d4117" />
-          </linearGradient>
-
-          <linearGradient id="circuit-glow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#00f2fe" />
-            <stop offset="100%" stopColor="#0072ff" />
-          </linearGradient>
-
-          <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <path
-          d="M100 20 C100 20 185 130 185 205 C185 252.5 147 290 100 290 C53 290 15 252.5 15 205 C15 130 100 20 100 20 Z"
-          fill="#060912"
-          stroke="url(#gold-grad-outer)"
-          strokeWidth="6"
-        />
-
-        {/* Outer Left Swooping Crescent filled with gold gradient */}
-        <path
-          d="M 100 45 C 75 110 38 170 38 215 C 38 245 62 278 100 278 C 96 270 78 244 78 215 C 78 170 94 110 100 45 Z"
-          fill="url(#gold-grad-inner)"
-        />
-
-        {/* Inner Left Swooping Crescent filled with gold gradient */}
-        <path
-          d="M 100 80 C 88 120 62 170 62 215 C 62 238 78 259 100 259 C 97 252 86 236 86 215 C 86 170 95 125 100 80 Z"
-          fill="url(#gold-grad-inner)"
-          opacity="0.85"
-          style={{ marginTop: '0px', paddingLeft: '1px' }}
-        />
-
-        {/* Glowing Blue Circuits on the Right side */}
-        <g stroke="url(#circuit-glow)" strokeLinecap="round" strokeLinejoin="round" filter="url(#neon-glow)" fill="none">
-          {/* Central main trace with angled bends */}
-          <path d="M 112 125 L 112 180 L 124 195 L 124 265" strokeWidth="3" />
-          
-          {/* Secondary right-hand trace */}
-          <path d="M 134 150 L 134 210 L 146 225 L 146 270" strokeWidth="3" />
-
-          {/* Inner vertical short trace */}
-          <path d="M 102 195 L 102 255" strokeWidth="3" />
-
-          {/* Far right vertical short trace */}
-          <path d="M 154 185 L 154 245" strokeWidth="3" />
-
-          {/* Bottom left short trace component */}
-          <path d="M 90 220 L 90 248" strokeWidth="3" />
-        </g>
-
-        {/* Glowing nodes (Circles with dark centers to emulate hollow circuit pads) */}
-        <g filter="url(#neon-glow)">
-          <circle cx="112" cy="125" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#060912" />
-          <circle cx="134" cy="150" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#060912" />
-          <circle cx="102" cy="195" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#060912" />
-          <circle cx="154" cy="185" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#060912" />
-          <circle cx="90" cy="220" r="4" stroke="#00f2fe" strokeWidth="2" fill="#060912" />
-        </g>
-      </svg>
-    );
-  }
-
-  return (
-    <img
-      id="oilgate-drop-logo"
-      src="/assets/oilgate-ai-drop-logo.png"
-      alt="Oilgate AI Logo"
-      className={className}
-      style={style}
-      referrerPolicy="no-referrer"
-      onError={() => {
-        console.log('Using beautiful high-fidelity SVG fallback for Oilgate drop-only logo.');
-        setError(true);
-      }}
-    />
-  );
-};
-
-/**
- * Full Logo: Features a premium dark metallic portal arch surrounding the golden drop logo,
- * with modern elegant typography below.
- * Attempts to load from `/assets/oilgate-ai-full-logo.png`.
- * Falls back to high-fidelity SVG output if file is not found.
- */
-export const OilgateFullLogo: React.FC<LogoProps> = ({ className = '', style }) => {
-  const [error, setError] = useState(false);
-
-  if (error) {
-    return (
-      <svg
-        id="oilgate-full-svg-fallback"
-        className={`w-full max-w-[280px] h-auto ${className}`}
-        style={style}
-        viewBox="0 0 540 540"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="full-gold-grad-outer" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#eed48f" />
-            <stop offset="35%" stopColor="#c5a059" />
-            <stop offset="70%" stopColor="#8d6526" />
-            <stop offset="100%" stopColor="#eed48f" />
-          </linearGradient>
-          <linearGradient id="full-gold-grad-inner" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fff3d1" />
-            <stop offset="40%" stopColor="#c5a059" />
-            <stop offset="100%" stopColor="#5d4117" />
-          </linearGradient>
-          <linearGradient id="full-circuit-glow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#00f2fe" />
-            <stop offset="100%" stopColor="#0072ff" />
-          </linearGradient>
-          <linearGradient id="metallic-arch" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2c303d" />
-            <stop offset="50%" stopColor="#15171d" />
-            <stop offset="100%" stopColor="#0d0e12" />
-          </linearGradient>
-          <filter id="neon-glow-full" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="3.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <line x1="130" y1="315" x2="410" y2="315" stroke="#121b2a" strokeWidth="4" />
-        <line x1="150" y1="312" x2="390" y2="312" stroke="#223b5d" strokeWidth="1.5" />
-
-        <rect x="155" y="105" width="230" height="205" fill="none" stroke="#202636" strokeWidth="3" rx="2" />
-        <path d="M158 108 H382 V310 H345 V145 H195 V310 H158 Z" fill="url(#metallic-arch)" stroke="#1a202d" strokeWidth="2" />
-        
-        <rect x="156" y="260" width="30" height="5" fill="#c5a059" opacity="0.9" />
-        <rect x="354" y="260" width="30" height="5" fill="#c5a059" opacity="0.9" />
-
-        <path d="M192 310 V142 H348 V310" stroke="#00d8ff" strokeWidth="1.5" filter="url(#neon-glow-full)" opacity="0.65" />
-
-        <g transform="translate(193, 142) scale(0.77)">
-          <path
-            d="M100 20 C100 20 185 130 185 205 C185 252.5 147 290 100 290 C53 290 15 252.5 15 205 C15 130 100 20 100 20 Z"
-            fill="#030509"
-            stroke="url(#full-gold-grad-outer)"
-            strokeWidth="5.5"
-          />
-          {/* Outer Left Swooping Crescent filled with gold gradient */}
-          <path
-            d="M 100 45 C 75 110 38 170 38 215 C 38 245 62 278 100 278 C 96 270 78 244 78 215 C 78 170 94 110 100 45 Z"
-            fill="url(#full-gold-grad-inner)"
-          />
-
-          {/* Inner Left Swooping Crescent filled with gold gradient */}
-          <path
-            d="M 100 80 C 88 120 62 170 62 215 C 62 238 78 259 100 259 C 97 252 86 236 86 215 C 86 170 95 125 100 80 Z"
-            fill="url(#full-gold-grad-inner)"
-            opacity="0.85"
-          />
-
-          {/* Glowing Blue Circuits on the Right side */}
-          <g stroke="url(#full-circuit-glow)" strokeLinecap="round" strokeLinejoin="round" filter="url(#neon-glow-full)" fill="none">
-            {/* Central main trace with angled bends */}
-            <path d="M 112 125 L 112 180 L 124 195 L 124 265" strokeWidth="3" />
-            
-            {/* Secondary right-hand trace */}
-            <path d="M 134 150 L 134 210 L 146 225 L 146 270" strokeWidth="3" />
-
-            {/* Inner vertical short trace */}
-            <path d="M 102 195 L 102 255" strokeWidth="3" />
-
-            {/* Far right vertical short trace */}
-            <path d="M 154 185 L 154 245" strokeWidth="3" />
-
-            {/* Bottom left short trace component */}
-            <path d="M 90 220 L 90 248" strokeWidth="3" />
-          </g>
-
-          {/* Glowing nodes (Circles with dark centers to emulate hollow circuit pads) */}
-          <g filter="url(#neon-glow-full)">
-            <circle cx="112" cy="125" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#030509" />
-            <circle cx="134" cy="150" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#030509" />
-            <circle cx="102" cy="195" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#030509" />
-            <circle cx="154" cy="185" r="4.5" stroke="#00f2fe" strokeWidth="2.5" fill="#030509" />
-            <circle cx="90" cy="220" r="4" stroke="#00f2fe" strokeWidth="2" fill="#030509" />
-          </g>
-        </g>
-
-        <text
-          x="270"
-          y="390"
-          fontFamily="'Space Grotesk', 'Inter', sans-serif"
-          fontWeight="700"
-          fontSize="48"
-          fill="#FFFFFF"
-          textAnchor="middle"
-          letterSpacing="12"
-        >
-          OILGATE<tspan fill="#0072ff"> AI</tspan>
-        </text>
-
-        <g transform="translate(0, 425)">
-          <line x1="45" y1="-8" x2="135" y2="-8" stroke="#c5a059" strokeWidth="1.5" />
-          
-          <text
-            x="270"
-            y="0"
-            fontFamily="'Inter', sans-serif"
-            fontWeight="500"
-            fontSize="14"
-            fill="#c5a059"
-            textAnchor="middle"
-            letterSpacing="4"
-          >
-            INTELLIGENCE UNLOCKS POTENTIAL
-          </text>
-
-          <line x1="405" y1="-8" x2="495" y2="-8" stroke="#c5a059" strokeWidth="1.5" />
-        </g>
-      </svg>
-    );
-  }
-
-  return (
-    <img
-      id="oilgate-full-logo"
-      src="/assets/oilgate-ai-full-logo.png"
-      alt="Oilgate AI Full Logo"
-      className={className}
-      style={style}
-      referrerPolicy="no-referrer"
-      onError={() => {
-        console.log('Using beautiful high-fidelity SVG fallback for Oilgate full logo.');
-        setError(true);
-      }}
-    />
-  );
-};
+export const OilgateFullLogo: React.FC<LogoProps> = ({ className = '', style }) => (
+  <img
+    id="oilgate-full-logo"
+    src={OILGATE_FULL_LOGO_SRC}
+    alt="Oilgate AI Full Logo"
+    className={className}
+    style={style}
+    referrerPolicy="no-referrer"
+  />
+);
