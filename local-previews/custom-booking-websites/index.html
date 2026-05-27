@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Booking Websites — Oilgate AI (Preview)</title>
+  <meta name="description" content="Local preview of the future Oilgate AI Custom Booking Websites service page. Stop renting your booking app. Own a custom booking website powered by Stripe." />
+  <link rel="icon" href="assets/oilgate-ai-drop-logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Preview banner — this only shows in the local preview, never in production -->
+<div class="preview-banner" role="note" aria-label="Local preview banner">
+  <span class="preview-banner__dot"></span>
+  LOCAL PREVIEW — Not wired into the live website. Future Oilgate AI tab draft.
+</div>
+
+<!-- Mock header so the preview looks like a tab inside OilgateAI.com -->
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="#" class="site-header__brand" aria-label="Oilgate AI">
+      <img src="assets/oilgate-ai-full-logo.png" alt="Oilgate AI" class="site-header__logo" />
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#" class="site-nav__link">Home</a>
+      <a href="#" class="site-nav__link">Services</a>
+      <a href="#" class="site-nav__link site-nav__link--active" aria-current="page">Custom Booking Websites</a>
+      <a href="#" class="site-nav__link">Contact</a>
+    </nav>
+    <a href="#calculator" class="site-header__cta">Run My Numbers</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- =============================== HERO =============================== -->
+  <section class="hero">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--left" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--right" aria-hidden="true"></div>
+
+    <div class="hero__inner">
+
+      <!-- Left column: hero copy + pricing card -->
+      <div class="hero__left">
+        <div class="hero__brand-row">
+          <img src="assets/oilgate-ai-drop-logo.png" alt="Oilgate AI" class="hero__brand-icon" />
+          <span class="hero__brand-word">OILGATE&nbsp;AI&nbsp;<span class="hero__brand-divider">/</span>&nbsp;SERVICES</span>
+        </div>
+
+        <span class="eyebrow">CUSTOM BOOKING WEBSITES</span>
+
+        <h1 class="hero__headline">Stop Renting Your Booking App.</h1>
+        <h2 class="hero__subheadline">Own the system that runs your business.</h2>
+
+        <p class="hero__paragraph">
+          Get a custom booking website with Stripe payments, zero monthly platform fees,
+          and total control over your customer experience, data, and brand.
+        </p>
+
+        <div class="hero__ctas">
+          <a href="#calculator" class="btn btn--primary">
+            <span class="btn__sparkle" aria-hidden="true">✦</span>
+            Run My Numbers
+          </a>
+          <a href="#quote" class="btn btn--ghost">
+            Request a Custom Quote
+          </a>
+        </div>
+
+        <!-- Pricing card -->
+        <div class="pricing-card">
+          <div class="pricing-card__top">
+            <span class="pricing-card__label">Starts at</span>
+            <span class="pricing-card__price">$750</span>
+          </div>
+          <div class="pricing-card__range">
+            Typical starter range: <strong>$750–$2,500</strong>
+          </div>
+          <div class="pricing-card__note">One-time investment. You own it.</div>
+          <div class="pricing-card__chips">
+            <span class="chip">No monthly platform fee</span>
+            <span class="chip">Stripe payments</span>
+            <span class="chip">You keep the website</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right column: live calculator -->
+      <aside class="hero__right">
+        <div class="calc" id="calculator" aria-label="Booking cost calculator">
+
+          <div class="calc__header">
+            <div class="calc__title-row">
+              <span class="calc__badge">LIVE CALCULATOR</span>
+              <span class="calc__status">
+                <span class="calc__status-dot"></span>
+                INTERACTIVE
+              </span>
+            </div>
+            <h3 class="calc__title">Booking Cost Calculator</h3>
+            <p class="calc__subtitle">
+              See exactly what platform fees are costing you — and when ownership pays off.
+            </p>
+          </div>
+
+          <!-- Inputs -->
+          <div class="calc__inputs">
+
+            <div class="calc__field">
+              <label for="platform" class="calc__label">Current Platform</label>
+              <div class="calc__select-wrap">
+                <select id="platform" class="calc__select">
+                  <option value="booksy" selected>Booksy</option>
+                  <option value="vagaro">Vagaro</option>
+                  <option value="squire">Squire</option>
+                  <option value="other">Other</option>
+                </select>
+                <span class="calc__select-caret" aria-hidden="true">▾</span>
+              </div>
+              <div class="calc__quick-options" role="group" aria-label="Quick platform select">
+                <button type="button" class="quick-pill is-active" data-platform="booksy">Booksy</button>
+                <button type="button" class="quick-pill" data-platform="vagaro">Vagaro</button>
+                <button type="button" class="quick-pill" data-platform="squire">Squire</button>
+              </div>
+            </div>
+
+            <div class="calc__field">
+              <label for="annualVolume" class="calc__label">Annual Card Volume</label>
+              <div class="calc__money-input">
+                <span class="calc__money-prefix">$</span>
+                <input id="annualVolume" type="number" min="0" step="500" value="60000" class="calc__input" />
+              </div>
+              <div class="calc__helper" id="volumeHelper">≈ $5,000/mo</div>
+            </div>
+
+          </div>
+
+          <!-- Auto-populated platform fee cards -->
+          <div class="calc__fees">
+            <div class="calc__fees-label">
+              Platform Fees <span class="calc__fees-sub">(auto-calculated from your volume)</span>
+            </div>
+            <div class="fee-grid">
+              <div class="fee-card" data-fee="software">
+                <div class="fee-card__head">
+                  <span class="fee-card__title">Software Fee</span>
+                  <button type="button" class="fee-card__edit" aria-label="Edit software fee" data-edit="software">✎</button>
+                </div>
+                <div class="fee-card__value">
+                  <span id="feeSoftwareMonthly">$29.99</span>
+                  <span class="fee-card__period">/mo</span>
+                </div>
+                <div class="fee-card__sub">
+                  <span id="feeSoftwareAnnual">$359.88</span> /yr
+                </div>
+              </div>
+
+              <div class="fee-card" data-fee="processing">
+                <div class="fee-card__head">
+                  <span class="fee-card__title">Processing Fee</span>
+                  <button type="button" class="fee-card__edit" aria-label="Edit processing fee" data-edit="processing">✎</button>
+                </div>
+                <div class="fee-card__value">
+                  <span id="feeProcessingPct">2.69%</span>
+                  <span class="fee-card__plus">+</span>
+                  <span id="feeProcessingFixed">$0.30</span>
+                </div>
+                <div class="fee-card__sub">per transaction</div>
+              </div>
+
+              <div class="fee-card fee-card--accent" data-fee="effective">
+                <div class="fee-card__head">
+                  <span class="fee-card__title">Effective Processing Cost</span>
+                </div>
+                <div class="fee-card__value">
+                  <span id="feeEffective">$1,974</span>
+                  <span class="fee-card__period">/yr</span>
+                </div>
+                <div class="fee-card__sub" id="feeEffectiveSub">on $60,000 volume · ~1,200 txns</div>
+              </div>
+            </div>
+
+            <p class="calc__formula">
+              <strong>Processing formula:</strong>
+              annual volume × percentage + $0.30 per transaction.
+              <br />
+              <em>Example assumption:</em> ~1,200 transactions/year at ~$50 average ticket.
+              <button type="button" class="calc__advanced-toggle" id="advancedToggle">
+                Advanced edits <span aria-hidden="true">▾</span>
+              </button>
+            </p>
+
+            <!-- Advanced / volume assumptions -->
+            <div class="advanced" id="advancedPanel" hidden>
+              <div class="advanced__grid">
+                <div class="advanced__field">
+                  <label for="avgTicket">Assumed average ticket</label>
+                  <div class="calc__money-input">
+                    <span class="calc__money-prefix">$</span>
+                    <input id="avgTicket" type="number" min="1" step="1" value="50" />
+                  </div>
+                </div>
+                <div class="advanced__field">
+                  <label for="softwareMonthly">Current software fee /mo</label>
+                  <div class="calc__money-input">
+                    <span class="calc__money-prefix">$</span>
+                    <input id="softwareMonthly" type="number" min="0" step="0.01" value="29.99" />
+                  </div>
+                </div>
+                <div class="advanced__field">
+                  <label for="processingPct">Current processing %</label>
+                  <div class="calc__pct-input">
+                    <input id="processingPct" type="number" min="0" step="0.01" value="2.69" />
+                    <span class="calc__pct-suffix">%</span>
+                  </div>
+                </div>
+                <div class="advanced__field">
+                  <label for="processingFixed">Current fixed fee /txn</label>
+                  <div class="calc__money-input">
+                    <span class="calc__money-prefix">$</span>
+                    <input id="processingFixed" type="number" min="0" step="0.01" value="0.30" />
+                  </div>
+                </div>
+                <div class="advanced__field">
+                  <label for="setupFee">Current one-time setup fee</label>
+                  <div class="calc__money-input">
+                    <span class="calc__money-prefix">$</span>
+                    <input id="setupFee" type="number" min="0" step="1" value="0" />
+                  </div>
+                </div>
+                <div class="advanced__field">
+                  <label for="buildCost">Oilgate AI website build (one-time)</label>
+                  <div class="calc__money-input">
+                    <span class="calc__money-prefix">$</span>
+                    <input id="buildCost" type="number" min="0" step="50" value="750" />
+                  </div>
+                </div>
+              </div>
+              <p class="advanced__note">
+                Stripe processing is fixed at <strong>2.9% + $0.30</strong> per transaction in this calculator.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Comparison cards -->
+          <div class="compare">
+            <div class="compare__card compare__card--current">
+              <div class="compare__head">
+                <span class="compare__tag">Current Setup</span>
+                <span class="compare__platform" id="comparePlatformName">Booksy</span>
+              </div>
+              <ul class="compare__rows">
+                <li>
+                  <span>Annual Software / Platform Cost</span>
+                  <strong id="curSoftwareAnnual">$359.88</strong>
+                </li>
+                <li>
+                  <span>Annual Processing Fees</span>
+                  <strong id="curProcessingAnnual">$1,974.00</strong>
+                </li>
+                <li>
+                  <span>One-Time Setup Fee</span>
+                  <strong id="curSetup">$0.00</strong>
+                </li>
+                <li class="compare__total">
+                  <span>Estimated Year 1 Total</span>
+                  <strong id="curYear1">$2,333.88</strong>
+                </li>
+              </ul>
+            </div>
+
+            <div class="compare__card compare__card--oilgate">
+              <div class="compare__head">
+                <span class="compare__tag compare__tag--gold">Oilgate AI + Stripe</span>
+                <img src="assets/oilgate-ai-drop-logo.png" alt="" class="compare__icon" aria-hidden="true" />
+              </div>
+              <ul class="compare__rows">
+                <li>
+                  <span>Annual Software / Platform Cost</span>
+                  <strong class="text-good" id="oaSoftwareAnnual">$0.00</strong>
+                </li>
+                <li>
+                  <span>Annual Stripe Processing Fees</span>
+                  <strong id="oaProcessingAnnual">$2,100.00</strong>
+                </li>
+                <li>
+                  <span>One-Time Website Build Cost</span>
+                  <strong id="oaBuild">$750.00</strong>
+                </li>
+                <li class="compare__total">
+                  <span>Estimated Year 1 Total</span>
+                  <strong id="oaYear1">$2,850.00</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Break-even -->
+          <div class="breakeven" id="breakevenCard">
+            <div class="breakeven__label">Break-Even Point</div>
+            <p class="breakeven__text">Ownership becomes cheaper than your current platform around:</p>
+            <div class="breakeven__month">
+              Month <span id="breakevenMonth">39</span>
+            </div>
+            <p class="breakeven__sub">
+              You start saving money from Month <span id="breakevenMonthInline">39</span> onward.
+            </p>
+          </div>
+
+          <!-- Projection table -->
+          <div class="projection">
+            <div class="projection__head">
+              <h4 class="projection__title">5-Year Cost Projection</h4>
+              <span class="projection__hint">Lower is better</span>
+            </div>
+            <div class="projection__table-wrap">
+              <table class="projection__table" id="projectionTable">
+                <thead>
+                  <tr>
+                    <th scope="col">Year</th>
+                    <th scope="col">Current Platform</th>
+                    <th scope="col">Oilgate AI + Stripe</th>
+                    <th scope="col">Difference / Savings</th>
+                  </tr>
+                </thead>
+                <tbody id="projectionBody">
+                  <!-- rows injected by script -->
+                </tbody>
+                <tfoot>
+                  <tr class="projection__totals">
+                    <th scope="row">5-Year Total</th>
+                    <td id="totalCurrent">$11,669.40</td>
+                    <td id="totalOilgate">$11,250.00</td>
+                    <td class="projection__saved-cell">
+                      <div class="projection__saved-label">Total Saved After 5 Years</div>
+                      <div class="projection__saved-value" id="totalSaved">$419.40</div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <p class="projection__footnote">
+              Estimates only. Final pricing depends on services, staff, deposit rules, integrations, and intake/workflow complexity.
+            </p>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- =========================== WHY THIS EXISTS =========================== -->
+  <section class="section section--why">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">WHY THIS EXISTS</span>
+        <h2 class="section__title">Booking platforms quietly tax your business.</h2>
+        <p class="section__lede">
+          We built this for service pros who are tired of paying a platform tax forever — and want to own the system that runs their bookings.
+        </p>
+      </div>
+
+      <div class="why-grid">
+        <article class="why-card">
+          <div class="why-card__icon" aria-hidden="true">$</div>
+          <h3>Monthly fees that add up</h3>
+          <p>Platform subscriptions and processing fees quietly eat into your revenue.</p>
+        </article>
+        <article class="why-card">
+          <div class="why-card__icon" aria-hidden="true">◷</div>
+          <h3>Limited control</h3>
+          <p>You don’t own your data, your customer experience, or your brand.</p>
+        </article>
+        <article class="why-card">
+          <div class="why-card__icon" aria-hidden="true">↗</div>
+          <h3>Hard to grow</h3>
+          <p>Rented profiles limit marketing, automation, and long-term value.</p>
+        </article>
+        <article class="why-card why-card--accent">
+          <div class="why-card__icon" aria-hidden="true">✦</div>
+          <h3>It should be yours</h3>
+          <p>Your business deserves an owned system built for scale.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== COMPARISON =========================== -->
+  <section class="section section--compare-detail">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">RENTED vs OWNED</span>
+        <h2 class="section__title">Rented Booking Profile <span class="muted">vs.</span> Owned Booking Website</h2>
+      </div>
+
+      <div class="vs-row">
+        <article class="vs-card vs-card--left">
+          <header class="vs-card__head">
+            <span class="vs-card__tag">Rented Booking Profile</span>
+            <div class="vs-card__competitors">
+              <span class="competitor-label">Booksy</span>
+              <span class="competitor-dot"></span>
+              <span class="competitor-label">Vagaro</span>
+              <span class="competitor-dot"></span>
+              <span class="competitor-label">Squire</span>
+            </div>
+          </header>
+          <ul class="vs-card__list">
+            <li><span class="x">×</span> Monthly software fees you can’t avoid</li>
+            <li><span class="x">×</span> Your brand lives on their platform</li>
+            <li><span class="x">×</span> Limited marketing &amp; automation</li>
+            <li><span class="x">×</span> They can change pricing or rules</li>
+            <li><span class="x">×</span> Harder to build long-term equity</li>
+          </ul>
+        </article>
+
+        <div class="vs-divider" aria-hidden="true">
+          <span class="vs-divider__line"></span>
+          <span class="vs-divider__pill">VS</span>
+          <span class="vs-divider__line"></span>
+        </div>
+
+        <article class="vs-card vs-card--right">
+          <header class="vs-card__head">
+            <span class="vs-card__tag vs-card__tag--gold">Owned Booking Website</span>
+            <img src="assets/oilgate-ai-drop-logo.png" alt="Oilgate AI" class="vs-card__brand" />
+          </header>
+          <ul class="vs-card__list">
+            <li><span class="check">✓</span> Zero monthly platform fees</li>
+            <li><span class="check">✓</span> 100% control over your brand &amp; data</li>
+            <li><span class="check">✓</span> Powerful marketing &amp; automation</li>
+            <li><span class="check">✓</span> You own your data and customer relationships</li>
+            <li><span class="check">✓</span> A digital asset that grows with your business</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== BUILT FOR SERVICE PROS =========================== -->
+  <section class="section section--pros">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">BUILT FOR SERVICE PROS</span>
+        <h2 class="section__title">Designed for appointment-based businesses.</h2>
+      </div>
+
+      <div class="pros-grid">
+        <article class="pro-card">
+          <h3>Barbershops</h3>
+          <p>More bookings. More rebooks. Less no-shows.</p>
+        </article>
+        <article class="pro-card">
+          <h3>Salons</h3>
+          <p>Showcase your work. Fill your chair.</p>
+        </article>
+        <article class="pro-card">
+          <h3>Nail Techs</h3>
+          <p>Streamlined booking. Happy clients.</p>
+        </article>
+        <article class="pro-card">
+          <h3>Estheticians &amp; Spas</h3>
+          <p>Premium experience. Loyal clients.</p>
+        </article>
+        <article class="pro-card">
+          <h3>Med Spas</h3>
+          <p>Professional. Compliant. Always booked.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== FEATURE PARITY =========================== -->
+  <section class="section section--features">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">FEATURE PARITY YOU EXPECT</span>
+        <h2 class="section__title">Everything your booking app does — and more.</h2>
+        <p class="section__lede">
+          Each build is scoped to your workflow. These can be included depending on services, staff, and intake needs.
+        </p>
+      </div>
+
+      <div class="feature-strip">
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">📅</div>
+          <h4>Online Booking</h4>
+          <p>24/7 booking that never sleeps</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">👥</div>
+          <h4>Staff Management</h4>
+          <p>Team schedules made simple</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">✦</div>
+          <h4>Services &amp; Add-ons</h4>
+          <p>Packages, upgrades &amp; memberships</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">⌁</div>
+          <h4>Reminders</h4>
+          <p>Automated texts &amp; emails</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">$</div>
+          <h4>Payments</h4>
+          <p>Secure Stripe payments</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">★</div>
+          <h4>Reviews</h4>
+          <p>Collect reviews automatically</p>
+        </div>
+        <div class="feature-tile">
+          <div class="feature-tile__icon" aria-hidden="true">◉</div>
+          <h4>Analytics</h4>
+          <p>Know your numbers. Grow smarter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== FINAL CTA =========================== -->
+  <section class="section section--final-cta" id="quote">
+    <div class="bg-glow bg-glow--center" aria-hidden="true"></div>
+    <div class="section__inner final-cta">
+      <img src="assets/oilgate-ai-full-logo.png" alt="Oilgate AI" class="final-cta__logo" />
+      <h2 class="final-cta__title">
+        Stop paying platform tax.<br />
+        <span class="text-gradient">Own your booking experience.</span>
+      </h2>
+      <p class="final-cta__lede">
+        Run your numbers and see when your booking website pays for itself.
+      </p>
+      <div class="final-cta__buttons">
+        <a href="#calculator" class="btn btn--primary">
+          <span class="btn__sparkle" aria-hidden="true">✦</span>
+          Run My Numbers
+        </a>
+        <a href="mailto:hello@oilgateai.com" class="btn btn--ghost">
+          Request a Custom Quote
+        </a>
+      </div>
+      <div class="final-cta__pricing">
+        <span>Starts at <strong>$750</strong></span>
+        <span class="dot-sep"></span>
+        <span>Typical starter range: <strong>$750–$2,500</strong></span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <img src="assets/oilgate-ai-drop-logo.png" alt="Oilgate AI" class="site-footer__logo" />
+      <span>Oilgate AI · Custom Booking Websites (Preview)</span>
+    </div>
+    <div class="site-footer__note">
+      Local preview only · Not connected to the live oilgateai.com website.
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
