@@ -1,4 +1,3 @@
-import type { Handler } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 
 /**
@@ -6,6 +5,9 @@ import { getStore } from '@netlify/blobs';
  *
  * Increments the shared visitor count by 1 and returns the new count.
  * Persistence: Netlify Blobs (key-value store, auto-wired in Netlify env).
+ *
+ * Uses the Netlify Functions v2 (Request/Response) format for cleaner
+ * runtime context wiring than the legacy Handler format.
  */
 
 // Initial baseline used the first time the store has no value.
@@ -14,28 +16,32 @@ const BASELINE = -1;
 const STORE_NAME = 'bananafans-visitor-counter';
 const KEY = 'count';
 
-function jsonResponse(statusCode: number, body: unknown) {
-  return {
-    statusCode,
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
     },
-    body: JSON.stringify(body),
-  };
+  });
 }
 
-export const handler: Handler = async () => {
+export default async (): Promise<Response> => {
   try {
-    const store = getStore(STORE_NAME);
+    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
     const current = await store.get(KEY);
-    const n = current !== null && current !== undefined ? Number(current) : BASELINE;
-    const safeCurrent = Number.isFinite(n) ? n : BASELINE;
+    const parsed = current !== null && current !== undefined ? Number(current) : BASELINE;
+    const safeCurrent = Number.isFinite(parsed) ? parsed : BASELINE;
     const next = safeCurrent + 1;
     await store.set(KEY, String(next));
-    return jsonResponse(200, { count: next });
+    return jsonResponse({ count: next });
   } catch (err: any) {
-    console.error('[visit] increment failed:', err?.message || err);
-    return jsonResponse(500, { error: 'Failed to increment counter' });
+    const message = err?.message || String(err);
+    const name = err?.name || 'Error';
+    console.error('[visit] increment failed:', name, message);
+    return jsonResponse(
+      { error: 'Failed to increment counter', name, message },
+      500,
+    );
   }
 };

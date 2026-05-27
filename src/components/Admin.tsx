@@ -9,14 +9,19 @@ import React, { useEffect, useState } from 'react';
  * - NEVER calls /api/visit, so it cannot increment the counter.
  * - Renders nothing but the number itself when the key is valid,
  *   or the words "Access Denied" when it is missing or wrong.
- * - No labels, logos, charts, buttons, links, or navigation.
+ * - No labels, logos, charts, buttons, links, navigation, or bars.
+ * - Treats 0 as a valid count (renders "0", not blank).
+ * - On error or loading, renders a blank screen — never a stray glyph
+ *   that could look like a UI element.
  */
 
 const ADMIN_KEY = 'oilgate-private-count';
 
+type LoadState = 'loading' | 'ready' | 'error';
+
 export const Admin: React.FC = () => {
   const [count, setCount] = useState<number | null>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [state, setState] = useState<LoadState>('loading');
 
   const params = new URLSearchParams(window.location.search);
   const isAuthorized = params.get('key') === ADMIN_KEY;
@@ -29,14 +34,17 @@ export const Admin: React.FC = () => {
       try {
         // READ ONLY. Never POST. The increment endpoint is /api/visit
         // and must never be called from this page.
-        const res = await fetch('/api/visit-count', { method: 'GET' });
-        if (!res.ok) throw new Error('bad response');
+        const res = await fetch('/api/visit-count', { method: 'GET', cache: 'no-store' });
+        if (!res.ok) throw new Error('bad response: ' + res.status);
         const data = await res.json();
         const n = Number(data?.count);
         if (!Number.isFinite(n)) throw new Error('bad number');
-        if (!cancelled) setCount(n);
+        if (!cancelled) {
+          setCount(n);
+          setState('ready');
+        }
       } catch {
-        if (!cancelled) setError(true);
+        if (!cancelled) setState('error');
       }
     })();
 
@@ -51,15 +59,18 @@ export const Admin: React.FC = () => {
     );
   }
 
+  // Render the number — including 0 — when ready. Otherwise render
+  // an empty container. Critically, NEVER render a placeholder glyph
+  // like "—" or "..." at the giant number font size, because at
+  // 280px those look like a horizontal bar, not a UI hint.
+  const display =
+    state === 'ready' && count !== null && Number.isFinite(count)
+      ? count.toLocaleString()
+      : '';
+
   return (
     <div style={containerStyle}>
-      <div style={numberStyle}>
-        {error
-          ? '—'
-          : count === null
-            ? ''
-            : count.toLocaleString()}
-      </div>
+      <div style={numberStyle}>{display}</div>
     </div>
   );
 };
@@ -88,6 +99,10 @@ const numberStyle: React.CSSProperties = {
   lineHeight: 1,
   textAlign: 'center',
   userSelect: 'text',
+  // No background, no border, no width — so an empty value leaves a
+  // truly blank screen instead of a visible rectangle.
+  background: 'transparent',
+  border: 0,
 };
 
 const deniedStyle: React.CSSProperties = {

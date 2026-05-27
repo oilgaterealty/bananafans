@@ -1,4 +1,3 @@
-import type { Handler } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 
 /**
@@ -12,26 +11,30 @@ const BASELINE = -1;
 const STORE_NAME = 'bananafans-visitor-counter';
 const KEY = 'count';
 
-function jsonResponse(statusCode: number, body: unknown) {
-  return {
-    statusCode,
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
     },
-    body: JSON.stringify(body),
-  };
+  });
 }
 
-export const handler: Handler = async () => {
+export default async (): Promise<Response> => {
   try {
-    const store = getStore(STORE_NAME);
+    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
     const current = await store.get(KEY);
-    const n = current !== null && current !== undefined ? Number(current) : BASELINE;
-    const safe = Number.isFinite(n) ? n : BASELINE;
-    return jsonResponse(200, { count: safe });
+    const parsed = current !== null && current !== undefined ? Number(current) : BASELINE;
+    const safe = Number.isFinite(parsed) ? parsed : BASELINE;
+    return jsonResponse({ count: safe });
   } catch (err: any) {
-    console.error('[visit-count] read failed:', err?.message || err);
-    return jsonResponse(500, { error: 'Failed to read counter' });
+    const message = err?.message || String(err);
+    const name = err?.name || 'Error';
+    console.error('[visit-count] read failed:', name, message);
+    return jsonResponse(
+      { error: 'Failed to read counter', name, message },
+      500,
+    );
   }
 };
