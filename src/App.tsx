@@ -16,7 +16,7 @@ import {
 } from './utils/audio';
 
 // Starting anchor offset. Modify this to easily change the baseline counter representation!
-const CONFIGURABLE_STARTING_NUMBER = 14820;
+const CONFIGURABLE_STARTING_NUMBER = -1;
 
 export default function App() {
   const [targetCount, setTargetCount] = useState<number>(CONFIGURABLE_STARTING_NUMBER);
