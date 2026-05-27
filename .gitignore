@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Runtime data (persistent visitor counter)
+data/
+
+# Environment
+.env
+.env.local
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.log

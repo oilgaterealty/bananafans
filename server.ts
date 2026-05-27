@@ -3,6 +3,70 @@ import path from 'path';
 import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 
+// =====================================================================
+// Shared visitor counter — file-backed persistent store
+// =====================================================================
+// Single source of truth for the live BananaFans visitor count. Stored
+// in data/visitor-count.json so it survives process restarts (on hosts
+// with persistent disk). Reads are O(1) from an in-memory cache; writes
+// are serialised through a tiny promise queue to avoid file races.
+// =====================================================================
+
+const COUNT_FILE = path.join(process.cwd(), 'data', 'visitor-count.json');
+
+// Initial baseline matches CONFIGURABLE_STARTING_NUMBER in src/App.tsx.
+// Only used the first time the persistent file is created.
+const COUNTER_BASELINE = -1;
+
+let cachedCount: number | null = null;
+let writeQueue: Promise<void> = Promise.resolve();
+
+function readCountFromDisk(): number {
+  try {
+    if (fs.existsSync(COUNT_FILE)) {
+      const raw = fs.readFileSync(COUNT_FILE, 'utf-8');
+      const parsed = JSON.parse(raw);
+      const n = Number(parsed?.count);
+      if (Number.isFinite(n)) return n;
+    }
+  } catch (err) {
+    console.warn('[visitor-counter] read failed, falling back to baseline:', err);
+  }
+  return COUNTER_BASELINE;
+}
+
+function persistCount(n: number): void {
+  writeQueue = writeQueue.then(async () => {
+    try {
+      const dir = path.dirname(COUNT_FILE);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      await fs.promises.writeFile(
+        COUNT_FILE,
+        JSON.stringify({ count: n, updatedAt: new Date().toISOString() }, null, 2),
+        'utf-8'
+      );
+    } catch (err) {
+      console.warn('[visitor-counter] write failed:', err);
+    }
+  });
+}
+
+function getCount(): number {
+  if (cachedCount === null) {
+    cachedCount = readCountFromDisk();
+  }
+  return cachedCount;
+}
+
+function incrementCount(): number {
+  const next = getCount() + 1;
+  cachedCount = next;
+  persistCount(next);
+  return next;
+}
+
 // Automatic watcher for uploaded video assets
 function watchForUploadedVideos() {
   const rootDir = process.cwd();
@@ -68,6 +132,33 @@ watchForUploadedVideos();
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // ---------------------------------------------------------------
+  // Shared visitor counter endpoints
+  // ---------------------------------------------------------------
+  // Increment + return new count. Frontend calls this exactly once
+  // per browser session (gated by sessionStorage).
+  app.post('/api/visit', (_req, res) => {
+    try {
+      const count = incrementCount();
+      res.json({ count });
+    } catch (err: any) {
+      console.error('[visitor-counter] increment failed:', err);
+      res.status(500).json({ error: 'Failed to increment counter' });
+    }
+  });
+
+  // Read-only count. Used by the admin page and by repeat sessions
+  // that should not increment the counter.
+  app.get('/api/visit-count', (_req, res) => {
+    try {
+      const count = getCount();
+      res.json({ count });
+    } catch (err: any) {
+      console.error('[visitor-counter] read failed:', err);
+      res.status(500).json({ error: 'Failed to read counter' });
+    }
+  });
 
   // Endpoint to handle the developer file upload
   app.post('/api/dev-upload', express.raw({ type: '*/*', limit: '100mb' }), (req, res) => {

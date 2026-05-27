@@ -204,52 +204,72 @@ export default function App() {
   }, []);
 
   // Live Counter Loading & Increment Strategy
+  // Source of truth is now the server-side shared counter
+  // (POST /api/visit to increment, GET /api/visit-count to read).
+  // sessionStorage only guards against double-increment within a single
+  // browser session; it is not the count itself.
   useEffect(() => {
-    // Clear any stale pre-reset key so old browsers don't keep their cached count
+    const SESSION_FLAG = 'bananafans_has_counted';
+    let cancelled = false;
+    let delayTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // Clear legacy per-browser cached counts so the server count is the only truth
     try { localStorage.removeItem('bananafans_click_count'); } catch {}
+    try { localStorage.removeItem('bananafans_click_count_v2'); } catch {}
+    try { localStorage.removeItem('bananafans_incremented'); } catch {}
 
-    // 1. Check persistent localStorage for current count state
-    const savedCountStr = localStorage.getItem('bananafans_click_count_v2');
-    let actStartingCount = CONFIGURABLE_STARTING_NUMBER;
-    
-    if (savedCountStr) {
-      const parsed = parseInt(savedCountStr, 10);
-      // Accept any saved integer (including 0 and negatives) so the counter
-      // can progress naturally from the configured baseline upward.
-      if (!isNaN(parsed)) {
-        actStartingCount = parsed;
+    const parseCount = async (res: Response): Promise<number | null> => {
+      if (!res.ok) return null;
+      try {
+        const data = await res.json();
+        const n = Number(data?.count);
+        return Number.isFinite(n) ? n : null;
+      } catch {
+        return null;
       }
-    } else {
-      localStorage.setItem('bananafans_click_count_v2', String(CONFIGURABLE_STARTING_NUMBER));
-    }
+    };
 
-    // Set initial display count to the current saved baseline
-    setCurrentCount(actStartingCount);
-    setTargetCount(actStartingCount);
+    const loadCounter = async () => {
+      // 1. Read current shared count immediately so the scoreboard renders
+      //    the real number as soon as possible, with no animation jump.
+      try {
+        const res = await fetch('/api/visit-count', { method: 'GET' });
+        const n = await parseCount(res);
+        if (n !== null && !cancelled) {
+          setCurrentCount(n);
+          setTargetCount(n);
+        }
+      } catch {
+        // graceful fallback: keep the placeholder baseline already in state
+      }
 
-    // 2. Prevent spam: Increment once per unique session state
-    const alreadyIncremented = sessionStorage.getItem('bananafans_incremented');
-    
-    if (!alreadyIncremented) {
-      // NOTE ON FUTURE DATABASE INTEGRATION:
-      // When connecting a real production database (e.g. Supabase, Firebase Firestore, or Cloud SQL),
-      // replace this local increment of storage with a real asynchronous API call (e.g. POST /api/views).
-      // The API should handle database transactions to increment the visit count securely on the backend,
-      // and return the authentic live database number as the source of truth to set targetCount.
-      
-      const delayTimer = setTimeout(() => {
-        const finalCount = actStartingCount + 1;
-        localStorage.setItem('bananafans_click_count_v2', String(finalCount));
-        sessionStorage.setItem('bananafans_incremented', 'true');
-        
-        setTargetCount(finalCount);
-        setHasVisited(true);
-      }, 1000); // Deliberate premium 1-second delay after page load before incrementing
+      // 2. If this session hasn't counted yet, increment after the existing
+      //    1-second premium delay so the count-up animation still feels right.
+      const alreadyCounted = sessionStorage.getItem(SESSION_FLAG);
+      if (alreadyCounted) {
+        return;
+      }
+      delayTimer = setTimeout(async () => {
+        try {
+          const res = await fetch('/api/visit', { method: 'POST' });
+          const n = await parseCount(res);
+          if (n !== null && !cancelled) {
+            sessionStorage.setItem(SESSION_FLAG, 'true');
+            setTargetCount(n);
+            setHasVisited(true);
+          }
+        } catch {
+          // graceful fallback: leave displayed number unchanged
+        }
+      }, 1000);
+    };
 
-      return () => clearTimeout(delayTimer);
-    } else {
-      setHasVisited(false);
-    }
+    loadCounter();
+
+    return () => {
+      cancelled = true;
+      if (delayTimer) clearTimeout(delayTimer);
+    };
   }, []);
 
   // Smoothed count up scoreboard logic
