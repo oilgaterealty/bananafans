@@ -205,8 +205,11 @@ export default function App() {
 
   // Live Counter Loading & Increment Strategy
   useEffect(() => {
+    // Clear any stale pre-reset key so old browsers don't keep their cached count
+    try { localStorage.removeItem('bananafans_click_count'); } catch {}
+
     // 1. Check persistent localStorage for current count state
-    const savedCountStr = localStorage.getItem('bananafans_click_count');
+    const savedCountStr = localStorage.getItem('bananafans_click_count_v2');
     let actStartingCount = CONFIGURABLE_STARTING_NUMBER;
     
     if (savedCountStr) {
@@ -217,7 +220,7 @@ export default function App() {
         actStartingCount = parsed;
       }
     } else {
-      localStorage.setItem('bananafans_click_count', String(CONFIGURABLE_STARTING_NUMBER));
+      localStorage.setItem('bananafans_click_count_v2', String(CONFIGURABLE_STARTING_NUMBER));
     }
 
     // Set initial display count to the current saved baseline
@@ -236,7 +239,7 @@ export default function App() {
       
       const delayTimer = setTimeout(() => {
         const finalCount = actStartingCount + 1;
-        localStorage.setItem('bananafans_click_count', String(finalCount));
+        localStorage.setItem('bananafans_click_count_v2', String(finalCount));
         sessionStorage.setItem('bananafans_incremented', 'true');
         
         setTargetCount(finalCount);
