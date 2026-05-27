@@ -1,0 +1,33 @@
+# Netlify deploy config for the BananaFans site.
+# - SPA fallback so /admin (and any future client-side route) loads index.html.
+# - API redirects so the frontend's /api/visit calls hit Netlify Functions.
+# - Functions use esbuild bundling and Netlify Blobs for persistence.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# ----- API routes (MUST come before the SPA fallback) -----
+
+[[redirects]]
+  from = "/api/visit"
+  to = "/.netlify/functions/visit"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/visit-count"
+  to = "/.netlify/functions/visit-count"
+  status = 200
+  force = true
+
+# ----- SPA fallback for client-side routes (e.g. /admin) -----
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
