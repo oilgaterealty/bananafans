@@ -211,7 +211,9 @@ export default function App() {
     
     if (savedCountStr) {
       const parsed = parseInt(savedCountStr, 10);
-      if (!isNaN(parsed) && parsed > 0) {
+      // Accept any saved integer (including 0 and negatives) so the counter
+      // can progress naturally from the configured baseline upward.
+      if (!isNaN(parsed)) {
         actStartingCount = parsed;
       }
     } else {
