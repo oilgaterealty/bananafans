@@ -3,8 +3,9 @@ import { getStore } from '@netlify/blobs';
 /**
  * GET /api/visit-count -> /.netlify/functions/visit-count
  *
- * Returns the current shared visitor count WITHOUT incrementing it.
- * Used by the homepage on repeat sessions and by /admin.
+ * Returns the current shared visitor count WITHOUT incrementing or
+ * mutating anything. Used by the homepage on repeat sessions and by
+ * the /admin page. Strictly read-only.
  */
 
 const BASELINE = -1;
@@ -29,12 +30,7 @@ export default async (): Promise<Response> => {
     const safe = Number.isFinite(parsed) ? parsed : BASELINE;
     return jsonResponse({ count: safe });
   } catch (err: any) {
-    const message = err?.message || String(err);
-    const name = err?.name || 'Error';
-    console.error('[visit-count] read failed:', name, message);
-    return jsonResponse(
-      { error: 'Failed to read counter', name, message },
-      500,
-    );
+    console.error('[visit-count] failed:', err?.name, err?.message || err);
+    return jsonResponse({ error: 'Failed to read counter' }, 500);
   }
 };
