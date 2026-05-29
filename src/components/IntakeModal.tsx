@@ -20,6 +20,13 @@ import {
 import { OilgateFullLogo } from './OilgateLogos';
 import { IntakeFormData, BuildType, MainGoal, BudgetRange, TimelineOption } from '../types';
 import {
+  BUILD_TYPE_GROUPS,
+  BUILD_TYPE_HELP,
+  MAIN_GOAL_OPTIONS,
+  normalizeBuildType,
+  normalizeMainGoal,
+} from '../lib/intake-options';
+import {
   playModalClose,
   playSubmitSuccess,
   playSubmitFailure,
@@ -54,16 +61,21 @@ const useIntakeFormPersistence = (
         const saved = localStorage.getItem('oilgate_intake_form_progress');
         if (saved) {
           const parsed = JSON.parse(saved);
+          // Map any legacy persisted build type / main goal values onto
+          // the current option set so drafts created before the intake
+          // cleanup don't reopen blank or invalid.
+          const restoredBuildType = normalizeBuildType(parsed.buildType);
+          const restoredMainGoal = normalizeMainGoal(parsed.mainGoal);
           setFormData((prev) => ({
             ...prev,
             name: parsed.name ?? prev.name,
             email: parsed.email ?? prev.email,
             phone: parsed.phone ?? prev.phone,
             businessName: parsed.businessName ?? prev.businessName,
-            buildType: parsed.buildType ?? prev.buildType,
+            buildType: restoredBuildType || prev.buildType,
             projectDescription: parsed.projectDescription ?? prev.projectDescription,
             files: parsed.files ?? prev.files,
-            mainGoal: parsed.mainGoal ?? prev.mainGoal,
+            mainGoal: restoredMainGoal || prev.mainGoal,
             budget: parsed.budget ?? prev.budget,
             timeline: parsed.timeline ?? prev.timeline
           }));
@@ -116,57 +128,9 @@ const useIntakeFormPersistence = (
   }, [formData, isOpen, isSubmitted]);
 };
 
-const SERVICE_OPTIONS: BuildType[] = [
-  'Website',
-  'Landing page',
-  'Booking page',
-  'Web application',
-  'Mobile app',
-  'Client portal',
-  'Admin dashboard',
-  'Ecommerce store',
-  'Lead capture funnel',
-  'Real estate or rental page',
-  'Portfolio or personal brand page',
-  'Membership or private access page',
-  'Marketing ad',
-  'Social media ad',
-  'Short promo video',
-  'AI video ad',
-  'Poster or flyer',
-  'Event flyer',
-  'Business promo graphic',
-  'Product/service promo graphic',
-  'Logo concept',
-  'Brand concept',
-  'Not sure yet'
-];
-
-const SERVICE_HELP_TEXTS: Record<BuildType, string> = {
-  Website: 'A full website for your business, brand, service, or idea.',
-  'Landing page': 'A focused one-page page built to promote one offer, service, or campaign.',
-  'Booking page': 'A page designed to help people schedule, reserve, or request appointments.',
-  'Web application': 'A custom interactive web tool, dashboard, portal, or online system.',
-  'Mobile app': 'A mobile app concept or build plan for phones and tablets.',
-  'Client portal': 'A private area where clients can log in, view updates, submit info, or access files.',
-  'Admin dashboard': 'A backend control panel for managing data, content, customers, or business activity.',
-  'Ecommerce store': 'A page or store for selling products, services, packages, or digital items.',
-  'Lead capture funnel': 'A page built to collect names, emails, calls, inquiries, or booked appointments.',
-  'Real estate or rental page': 'A page for a property, rental, listing, short-term rental, or real estate offer.',
-  'Portfolio or personal brand page': 'A clean page to show your work, story, services, links, and personal brand.',
-  'Membership or private access page': 'A gated page or private area for members, customers, subscribers, or invited users.',
-  'Marketing ad': 'A single ad concept or creative asset for promoting your business or offer.',
-  'Social media ad': 'An ad designed for platforms like Instagram, Facebook, TikTok, YouTube, or X.',
-  'Short promo video': 'A short video to introduce, explain, or promote your brand, service, product, or event.',
-  'AI video ad': 'A video ad created or enhanced using AI tools, avatars, motion, or generated visuals.',
-  'Poster or flyer': 'A printable or digital flyer/poster for a business, event, offer, or announcement.',
-  'Event flyer': 'A flyer specifically for promoting an event, party, class, launch, or gathering.',
-  'Business promo graphic': 'A graphic that makes your business, service, or announcement look more professional.',
-  'Product/service promo graphic': 'A graphic focused on selling or explaining one specific product, package, or service.',
-  'Logo concept': 'A new logo idea, direction, or visual concept for your brand.',
-  'Brand concept': 'A broader creative direction including style, colors, logo ideas, visuals, and overall vibe.',
-  'Not sure yet': 'Choose this if you have an idea but need help figuring out what it should become.'
-};
+// Build type options + help text are sourced from src/lib/intake-options.ts
+// (BUILD_TYPE_GROUPS / BUILD_TYPE_HELP) so the form stays consistent with
+// future analytics, quote, and project-tracking surfaces.
 
 export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState<IntakeFormData>({
@@ -826,30 +790,43 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose }) => 
                             className="absolute z-20 mt-1.5 w-full bg-[#0d1321] border border-oilgate-border rounded-xl shadow-2xl max-h-56 overflow-y-auto focus:outline-none py-1.5 text-sm custom-scrollbar"
                             role="listbox"
                           >
-                            {SERVICE_OPTIONS.map((option) => (
-                              <li
-                                key={option}
-                                onClick={() => {
-                                  setFormData((prev) => ({ ...prev, buildType: option }));
-                                  validateField('buildType', option);
-                                  setIsDropdownOpen(false);
-                                  setHoveredOption('');
-                                }}
-                                onMouseEnter={() => setHoveredOption(option)}
-                                onMouseLeave={() => setHoveredOption('')}
-                                className={`cursor-pointer select-none px-4 py-2 hover:bg-white/5 transition-colors flex items-center justify-between text-xs py-2.5 ${
-                                  formData.buildType === option
-                                    ? 'bg-oilgate-blue/20 text-white font-medium border-l-2 border-oilgate-blue'
-                                    : 'text-gray-300 hover:text-white'
-                                }`}
-                                role="option"
-                                aria-selected={formData.buildType === option}
-                              >
-                                <span>{option}</span>
-                                {formData.buildType === option && (
-                                  <Check className="w-3.5 h-3.5 text-[#00c6ff]" />
-                                )}
-                              </li>
+                            {BUILD_TYPE_GROUPS.map((group, groupIdx) => (
+                              <React.Fragment key={group.label}>
+                                <li
+                                  role="presentation"
+                                  aria-hidden="true"
+                                  className={`px-4 pt-3 pb-1 text-[10px] font-mono font-bold tracking-widest uppercase text-oilgate-gold/80 select-none pointer-events-none ${
+                                    groupIdx > 0 ? 'mt-1 border-t border-zinc-800/60' : ''
+                                  }`}
+                                >
+                                  {group.label}
+                                </li>
+                                {group.options.map(({ value: option }) => (
+                                  <li
+                                    key={option}
+                                    onClick={() => {
+                                      setFormData((prev) => ({ ...prev, buildType: option }));
+                                      validateField('buildType', option);
+                                      setIsDropdownOpen(false);
+                                      setHoveredOption('');
+                                    }}
+                                    onMouseEnter={() => setHoveredOption(option)}
+                                    onMouseLeave={() => setHoveredOption('')}
+                                    className={`cursor-pointer select-none px-4 py-2 hover:bg-white/5 transition-colors flex items-center justify-between text-xs py-2.5 ${
+                                      formData.buildType === option
+                                        ? 'bg-oilgate-blue/20 text-white font-medium border-l-2 border-oilgate-blue'
+                                        : 'text-gray-300 hover:text-white'
+                                    }`}
+                                    role="option"
+                                    aria-selected={formData.buildType === option}
+                                  >
+                                    <span>{option}</span>
+                                    {formData.buildType === option && (
+                                      <Check className="w-3.5 h-3.5 text-[#00c6ff]" />
+                                    )}
+                                  </li>
+                                ))}
+                              </React.Fragment>
                             ))}
                           </motion.ul>
                         )}
@@ -871,7 +848,7 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose }) => 
                              <span className="font-semibold text-oilgate-gold">
                                {displayedHelpOption}:
                              </span>{' '}
-                             {SERVICE_HELP_TEXTS[displayedHelpOption as BuildType]}
+                             {BUILD_TYPE_HELP[displayedHelpOption as BuildType]}
                            </motion.p>
                          ) : null}
                        </AnimatePresence>
@@ -902,14 +879,9 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose }) => 
                       className={getSelectClassName('mainGoal')}
                     >
                       <option value="" disabled>--- What is the core goal? ---</option>
-                      <option value="Get more leads">Get more leads</option>
-                      <option value="Book more appointments">Book more appointments</option>
-                      <option value="Sell products or services">Sell products or services</option>
-                      <option value="Collect inquiries">Collect inquiries</option>
-                      <option value="Show off my brand better">Show off my brand better</option>
-                      <option value="Build a new idea from scratch">Build a new idea from scratch</option>
-                      <option value="Create a better customer experience">Create a better customer experience</option>
-                      <option value="Organize my backend/admin workflow">Organize my backend/admin workflow</option>
+                      {MAIN_GOAL_OPTIONS.map((goal) => (
+                        <option key={goal} value={goal}>{goal}</option>
+                      ))}
                     </select>
                     {errors.mainGoal && (
                       <span id="mainGoal-error" className="text-xs text-red-400 mt-1" role="alert">

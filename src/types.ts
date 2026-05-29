@@ -1,37 +1,44 @@
+// Public intake category types.
+// Source of truth for option values / help text / legacy mapping lives in
+// src/lib/intake-options.ts — keep these unions aligned with that file.
+
 export type BuildType =
+  // Websites & Pages
   | 'Website'
-  | 'Landing page'
-  | 'Booking page'
-  | 'Web application'
-  | 'Mobile app'
-  | 'Client portal'
-  | 'Admin dashboard'
-  | 'Ecommerce store'
-  | 'Lead capture funnel'
-  | 'Real estate or rental page'
-  | 'Portfolio or personal brand page'
-  | 'Membership or private access page'
-  | 'Marketing ad'
-  | 'Social media ad'
-  | 'Short promo video'
-  | 'AI video ad'
-  | 'Poster or flyer'
-  | 'Event flyer'
-  | 'Business promo graphic'
-  | 'Product/service promo graphic'
-  | 'Logo concept'
-  | 'Brand concept'
-  | 'Not sure yet';
+  | 'Landing Page'
+  | 'Booking / Lead Capture Page'
+  | 'Real Estate or Rental Page'
+  | 'Portfolio / Personal Brand Page'
+  | 'Membership / Gated Content Page'
+  // Apps & Systems
+  | 'Web Application'
+  | 'Mobile App'
+  | 'Client Portal'
+  | 'Admin Dashboard'
+  | 'Ecommerce Store'
+  | 'Automation System'
+  | 'AI-Powered Workflow'
+  | 'Custom Product Build'
+  // Marketing & Brand
+  | 'Logo Concept'
+  | 'Brand Concept'
+  | 'Social Media Ad / Promo Graphic'
+  | 'Short Promo Video'
+  | 'AI Video Ad'
+  | 'Poster / Flyer'
+  // Other
+  | 'Not Sure Yet';
 
 export type MainGoal =
-  | 'Get more leads'
-  | 'Book more appointments'
-  | 'Sell products or services'
-  | 'Collect inquiries'
-  | 'Show off my brand better'
-  | 'Build a new idea from scratch'
-  | 'Create a better customer experience'
-  | 'Organize my backend/admin workflow';
+  | 'Get More Leads'
+  | 'Book More Appointments'
+  | 'Sell Products or Services'
+  | 'Improve Brand / Online Presence'
+  | 'Create Marketing Assets'
+  | 'Launch a New Idea'
+  | 'Improve Customer Experience'
+  | 'Automate a Workflow'
+  | 'Organize Admin / Backend Operations';
 
 export type BudgetRange =
   | 'Under $500'
